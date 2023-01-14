@@ -85,14 +85,14 @@ const printListData = (listData && listData.results) || []
       <ul className='images'>
       {images.map (({ cid, data})=> (
         <ImageListItem key={cid} cid={cid} data={data} />
-      ))}
-      {printListData.map(({dataCid: cid})) => (
-        <ImageListItem key={cid} cid={cid} />
-      ))}
-    </ul>
-    </div>
-  )
-}
+        ))}
+        {printListData.map(({dataCid: cid}) => (
+          <ImageListItem key={cid} cid={cid} />
+        ))}
+       </ul>
+     </div>
+  
+             )}
 
 const Uploading = ({ file, uploadedCarChunks }) => (
   <div className='flex items-center'>
