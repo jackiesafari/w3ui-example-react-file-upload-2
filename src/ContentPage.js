@@ -1,8 +1,23 @@
 import React, { useState, useRef } from 'react'
 import { useUploader } from '@w3ui/react-uploader'
+import {useUploadsList} from '@w3ui/react-uploads-list'
 import { withIdentity } from './components/Authenticator'
 import { Camera } from 'react-camera-pro'
 import './spinner.css'
+
+function dataURLtoFile (dataurl) {
+  const arr = dataurl.split(',')
+  const mime = arr[0].match(/:(.*?);/)[1]
+  const bstr = atob(arr[1])
+  let n = bstr.length
+  const u8arr = new Uint8Array(n)
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n)
+  }
+  const blob = new Blob([u8arr], { type: mime })
+  return new File([blob], 'camera-image')
+}
+
 
 export function ContentPage () {
   const [{ uploadedCarChunks }, uploader] = useUploader()
@@ -11,6 +26,9 @@ export function ContentPage () {
   const [status, setStatus] = useState('')
   const [error, setError] = useState(null)
   const [images, setImages] = useState([])
+
+  //eslint-disable-next-line no-unused-vars
+  const {loading,error: listError, data: listData, reload: listReload} = useUploadsList();
   
   const camera = useRef(null)
 
@@ -18,10 +36,22 @@ export function ContentPage () {
 
   const takePhoto = async (e) => {
     e.preventDefault()
-    const imgdata = camera.takePhoto()
-    setImages([{ cid: null, data: imgdata}, ...images])
+    const imgdata = camera.current.takePhoto()
+    
+    try {
+      // Build a DAG from the file data to obtain the root CID.
+      setStatus('encoding')
+      const theFile = dataURLtoFile(imgdata)
+      setStatus('uploading')
+      const cid = await uploader.uploadFile(theFile)
+      setImages([{ cid: cid, data: imgdata }, ...images])
+    } catch (err) {
+      console.error(err)
+      setError(err)
+    } finally {
+      setStatus('done')
+    }
   }
-
   const handleUploadSubmit = async e => {
     e.preventDefault()
     try {
@@ -36,11 +66,16 @@ export function ContentPage () {
     }
   }
 const printStatus = status === 'done' && error ? error : status
+const printListData = (listData && listData.results) || []
 
   return (
-    <form onSubmit={handleUploadSubmit}>
-     <Camera ref={camera} />
+     
+     <div>
+      <p>
      <button onClick={takePhoto}>Take photo</button>
+     </p>
+     <Camera ref={camera} />
+
 
       <div className='db mb3'>
         <label htmlFor='file' className='db mb2'>File:</label>
@@ -51,8 +86,11 @@ const printStatus = status === 'done' && error ? error : status
       {images.map (({ cid, data})=> (
         <ImageListItem key={cid} cid={cid} data={data} />
       ))}
+      {printListData.map(({dataCid: cid})) => (
+        <ImageListItem key={cid} cid={cid} />
+      ))}
     </ul>
-    </form>
+    </div>
   )
 }
 
