@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react'
 import { useUploader } from '@w3ui/react-uploader'
-import {useUploadsList} from '@w3ui/react-uploads-list'
+
+
 import { withIdentity } from './components/Authenticator'
 import { Camera } from 'react-camera-pro'
 import './spinner.css'
@@ -27,8 +28,6 @@ export function ContentPage () {
   const [error, setError] = useState(null)
   const [images, setImages] = useState([])
 
-  //eslint-disable-next-line no-unused-vars
-  const {loading,error: listError, data: listData, reload: listReload} = useUploadsList();
   
   const camera = useRef(null)
 
@@ -66,7 +65,7 @@ export function ContentPage () {
     }
   }
 const printStatus = status === 'done' && error ? error : status
-const printListData = (listData && listData.results) || []
+
 
   return (
      
@@ -86,35 +85,15 @@ const printListData = (listData && listData.results) || []
       {images.map (({ cid, data})=> (
         <ImageListItem key={cid} cid={cid} data={data} />
         ))}
-        {printListData.map(({dataCid: cid}) => (
-          <ImageListItem key={cid} cid={cid} />
-        ))}
+       
        </ul>
      </div>
   
              )}
 
-const Uploading = ({ file, uploadedCarChunks }) => (
-  <div className='flex items-center'>
-    <div className='spinner mr3 flex-none' />
-    <div className='flex-auto'>
-      <p className='truncate'>Uploading DAG for {file.name}</p>
-      {uploadedCarChunks.map(({ cid, size }) => (
-        <p key={cid.toString()} className='f7 truncate'>
-          {cid.toString()} ({size} bytes)
-        </p>
-      ))}
-    </div>
-    
-  </div>
-)
 
-const Errored = ({ error }) => (
-  <div>
-    <h1 className='near-white'>⚠️ Error: failed to upload file: {error.message}</h1>
-    <p>Check the browser console for details.</p>
-  </div>
-)
+
+
 
 const Done = ({ file, dataCid, uploadedCarChunks }) => (
   <div>
