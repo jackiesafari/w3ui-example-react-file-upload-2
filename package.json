@@ -3,8 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "@livepeer/react": "^2.1.0",
+    "@livepeer/react-native": "^1.1.0",
     "@w3ui/react-keyring": "https://pkg.csb.dev/web3-storage/w3ui/commit/0e795822/@w3ui/react-keyring",
     "@w3ui/react-uploader": "https://pkg.csb.dev/web3-storage/w3ui/commit/0e795822/@w3ui/react-uploader",
+    "dotenv": "^16.0.3",
     "react": "^18.2.0",
     "react-camera-pro": "github:jchris/react-camera-pro",
     "react-dom": "^18.2.0",
