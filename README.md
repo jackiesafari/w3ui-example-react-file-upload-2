@@ -1,24 +1,11 @@
-# Example
+XMTP + LIVEPEER + IPFS
 
-To run this example:
+THis project will use streaming features from Livepeer to utilize for any educational settings with added feature of XMTP.
 
-- Clone the w3ui repository and enter the `w3ui` directory
+1. Clone repository or fork
 
-  ```sh
-  git clone https://github.com/web3-storage/w3ui
-  cd w3ui
-  ```
+2. Install npm
 
-- Install dependencies and build:
+3. Start npm
 
-  ```sh
-  npm install
-  npm run build
-  ```
-
-- Change to this example directory and run the example:
-
-  ```sh
-  cd examples/react/file-upload
-  npm start
-  ```
+After having the setup ready, make sure to connect your wallet to use the features available. 
